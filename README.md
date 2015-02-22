@@ -1,2 +1,3 @@
 # NaCl
 A Minecraft plugin I am making for a friend of mine.
+This one plugin has a multitude of functions! I don't really know what else to say.... At time of writing it's 8:00am and I haven't slept at all.....
