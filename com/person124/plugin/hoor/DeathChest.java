@@ -28,6 +28,7 @@ import com.massivecraft.factions.entity.BoardColl;
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.MPlayer;
 import com.massivecraft.massivecore.ps.PS;
+import com.person124.plugin.Config;
 import com.person124.plugin.PPBase;
 
 public class DeathChest extends PPBase {
@@ -39,29 +40,14 @@ public class DeathChest extends PPBase {
 	private boolean needChest, deleteChest;
 
 	public DeathChest() {
-		super("BecauseWhyNot");
-		setHasEvents(true);
-		setNeedsFolder(true);
+		super("DeathChest");
+		setHasEvents();
+		setNeedsFolder();
 	}
 
 	public void onEnable() {
 		cfgFile = new File(pp.getDataFolder(), "deathChest.prsn");
-		if (!cfgFile.exists()) {
-			try {
-				cfgFile.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			config = YamlConfiguration.loadConfiguration(cfgFile);
-			config.set("needChest", true);
-			config.set("deleteChest", true);
-			config.set("searchRange", 5);
-			try {
-				config.save(cfgFile);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} else config = YamlConfiguration.loadConfiguration(cfgFile);
+		config = Config.create(cfgFile, "needChest", true, "deleteChest", true, "searchRange", 5);
 
 		needChest = config.getBoolean("needChest");
 		deleteChest = config.getBoolean("deleteChest");

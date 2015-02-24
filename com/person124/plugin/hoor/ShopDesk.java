@@ -24,8 +24,8 @@ public class ShopDesk extends PPBase {
 	public ShopDesk() {
 		super("Shop Desk");
 		setCommand("shopdesk");
-		setHasEvents(true);
-		setNeedsFolder(true);
+		setHasEvents();
+		setNeedsFolder();
 	}
 
 	protected void onEnable() {

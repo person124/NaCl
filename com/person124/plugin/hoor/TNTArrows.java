@@ -2,7 +2,8 @@ package com.person124.plugin.hoor;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.ArrayList
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.ChatColor;
@@ -28,6 +29,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import com.massivecraft.factions.entity.BoardColl;
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.massivecore.ps.PS;
+import com.person124.plugin.Config;
 import com.person124.plugin.EnchantmentUtil;
 import com.person124.plugin.PPBase;
 
@@ -43,39 +45,14 @@ public class TNTArrows extends PPBase {
 
 	public TNTArrows() {
 		super("TNTArrows");
-		setHasEvents(true);
+		setHasEvents();
 		setCommand("tntbow");
-		setNeedsFolder(true);
+		setNeedsFolder();
 	}
 
 	public void onEnable() {
 		cfgFile = new File(pp.getDataFolder(), "tntarrow.prsn");
-		if (!cfgFile.exists()) {
-			try {
-				cfgFile.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			config = YamlConfiguration.loadConfiguration(cfgFile);
-			config.set("explosion.power", 4.0F);
-			config.set("explosion.breakblocks", true);
-			config.set("explosion.causefire", true);
-
-			List<String> strs = new ArrayList<String>();
-			strs.add("Wilderness");
-			config.set("shootbow", strs);
-
-			strs.clear();
-			strs.add("SafeZone");
-			strs.add("WarZone");
-			config.set("noexplode", strs);
-
-			try {
-				config.save(cfgFile);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} else config = YamlConfiguration.loadConfiguration(cfgFile);
+		config = Config.createConfig(cfgFile, "explosion.power", 4.0F, "explosion.breakblocks", true, "explosion.causefire", true, "shootbow", Arrays.asList(new String[] { "Wilderness" }), "noexplode", Arrays.asList(new String[] { "SafeZone", "WarZone" }));
 
 		pp.getLogger().info("Registering enchantments....");
 		if (Enchantment.getByName(TNT_BOW.getName()) == null) {

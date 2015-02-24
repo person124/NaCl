@@ -14,6 +14,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.FurnaceInventory;
 
+import com.person124.plugin.Config;
 import com.person124.plugin.PPBase;
 
 public class GunpowderPlots extends PPBase {
@@ -23,28 +24,13 @@ public class GunpowderPlots extends PPBase {
 
 	public GunpowderPlots() {
 		super("GunpowderPlots");
-		setHasEvents(true);
-		setNeedsFolder(true);
+		setHasEvents();
+		setNeedsFolder();
 	}
 	
 	protected void onEnable() {
 		cfgFile = new File(pp.getDataFolder(), "gplot.prsn");
-		if (!cfgFile.exists()) {
-			try {
-				cfgFile.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			config = YamlConfiguration.loadConfiguration(cfgFile);
-			config.set("explosion.power", 4.0F);
-			config.set("explosion.breakblocks", true);
-			config.set("explosion.causefire", true);
-			try {
-				config.save(cfgFile);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} else config = YamlConfiguration.loadConfiguration(cfgFile);
+		config = Config.create(cfgFile, "explosion.power", 4.0F, "explosion.breakblocks", true, "explosion.causefire", true);
 	}
 	
 	@EventHandler
