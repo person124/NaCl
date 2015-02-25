@@ -1,14 +1,12 @@
 package com.person124.plugin.hoor;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.bukkit.Material;
 import org.bukkit.block.Furnace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;

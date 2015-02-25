@@ -1,8 +1,7 @@
 package com.person124.plugin.hoor;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -11,7 +10,6 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -52,7 +50,7 @@ public class TNTArrows extends PPBase {
 
 	public void onEnable() {
 		cfgFile = new File(pp.getDataFolder(), "tntarrow.prsn");
-		config = Config.createConfig(cfgFile, "explosion.power", 4.0F, "explosion.breakblocks", true, "explosion.causefire", true, "shootbow", Arrays.asList(new String[] { "Wilderness" }), "noexplode", Arrays.asList(new String[] { "SafeZone", "WarZone" }));
+		config = Config.create(cfgFile, "explosion.power", 4.0F, "explosion.breakblocks", true, "explosion.causefire", true, "shootbow", Arrays.asList(new String[] { "Wilderness" }), "noexplode", Arrays.asList(new String[] { "SafeZone", "WarZone" }));
 
 		pp.getLogger().info("Registering enchantments....");
 		if (Enchantment.getByName(TNT_BOW.getName()) == null) {
