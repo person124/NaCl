@@ -1,5 +1,5 @@
 name: NaCl
-version: 1.3.21
+version: 1.3.28
 main: com.person124.plugin.hoor.NaCl
 author: person124
 commands:

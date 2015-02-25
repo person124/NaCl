@@ -3,7 +3,9 @@ package com.person124.plugin.hoor;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import net.md_5.bungee.api.ChatColor;
 
@@ -36,6 +38,7 @@ public class DeathChest extends PPBase {
 
 	private int searchRange;
 	private boolean needChest, deleteChest;
+	private List<String> materials;
 
 	public DeathChest() {
 		super("DeathChest");
@@ -45,11 +48,12 @@ public class DeathChest extends PPBase {
 
 	public void onEnable() {
 		cfgFile = new File(pp.getDataFolder(), "deathChest.prsn");
-		config = Config.create(cfgFile, "needChest", true, "deleteChest", true, "searchRange", 5);
+		config = Config.create(cfgFile, "needChest", true, "deleteChest", true, "searchRange", 5, "acceptSpawnBlocks", Arrays.asList(new String[] { "AIR", "LAVA", "WATER" }));
 
 		needChest = config.getBoolean("needChest");
 		deleteChest = config.getBoolean("deleteChest");
 		searchRange = config.getInt("searchRange");
+		materials = config.getStringList("acceptSpawnBlocks");
 	}
 
 	@EventHandler
@@ -84,22 +88,19 @@ public class DeathChest extends PPBase {
 		Chest chest = (Chest) l.getBlock().getState();
 
 		int temp = 0, other = 0;
-		for (int i = 0; i < 27; i++) {
+		for (int i = 0; i + other < 27; i++) {
 			ItemStack is = p.getInventory().getContents()[i + other];
 			if (is == null) {
 				temp++;
 				other++;
-				break;
-			}
-			chest.getBlockInventory().addItem(is);
-			p.getInventory().remove(is);
-		}
-		if (temp > 0) {
-			for (int i = 0; i < (temp > 4 ? 4 : temp); i++) {
-				ItemStack is = p.getInventory().getContents()[i];
-				if (is == null) break;
+			} else {
 				chest.getBlockInventory().addItem(is);
+				p.getInventory().remove(is);
 			}
+		}
+		for (int i = 0; i < (temp > 4 ? 4 : temp); i++) {
+			ItemStack is = p.getInventory().getArmorContents()[i];
+			if (is != null) chest.getBlockInventory().addItem(is);
 		}
 		setChestName(l, ChatColor.AQUA + "R.I.P. Stupid");
 
@@ -107,14 +108,14 @@ public class DeathChest extends PPBase {
 	}
 
 	private Location checkLocation(Location old) {
-		if (old.getBlock().getType() == Material.AIR) return old;
+		if (isAcceptableBlock(old.getBlock().getType())) return old;
 		for (int i = -searchRange; i <= searchRange; i++) {
 			int x = i + old.getBlockX();
 			int y = i + old.getBlockY();
 			int z = i + old.getBlockZ();
 
 			Location loc = new Location(old.getWorld(), x, y, z);
-			if (loc.getBlock().getType() == Material.AIR) return loc;
+			if (isAcceptableBlock(loc.getBlock().getType())) return loc;
 		}
 		return null;
 	}
@@ -163,6 +164,13 @@ public class DeathChest extends PPBase {
 		format = new SimpleDateFormat("HH:mm");
 		s.setLine(3, format.format(date));
 		s.update(false);
+	}
+
+	private boolean isAcceptableBlock(Material m) {
+		for (String str : materials) {
+			if (m == Material.getMaterial(str)) return true;
+		}
+		return false;
 	}
 
 	private boolean isEmpty(Inventory inv) {
