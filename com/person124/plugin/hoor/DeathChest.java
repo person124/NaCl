@@ -48,7 +48,7 @@ public class DeathChest extends PPBase {
 
 	public void onEnable() {
 		cfgFile = new File(pp.getDataFolder(), "deathChest.prsn");
-		config = Config.create(cfgFile, "needChest", true, "deleteChest", true, "searchRange", 5, "acceptSpawnBlocks", Arrays.asList(new String[] { "AIR", "LAVA", "WATER" }));
+		config = Config.create(cfgFile, "needChest", true, "deleteChest", true, "searchRange", 5, "acceptSpawnBlocks", Arrays.asList(new String[] { "AIR", "LAVA", "WATER", "STATIONARY_LAVA", "STATIONARY_WATER" }));
 
 		needChest = config.getBoolean("needChest");
 		deleteChest = config.getBoolean("deleteChest");
