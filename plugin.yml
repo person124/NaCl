@@ -1,5 +1,5 @@
 name: NaCl
-version: 1.3.29
+version: 1.4.26
 main: com.person124.plugin.hoor.NaCl
 author: person124
 commands:
@@ -10,4 +10,7 @@ commands:
 permissions:
   person.tntarrow:
     description: Allows you to use /tntbow
+    default: false
+  person.stupid:
+    description: Makes the particles follow you.
     default: false

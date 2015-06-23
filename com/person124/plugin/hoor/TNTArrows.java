@@ -88,7 +88,6 @@ public class TNTArrows extends PPBase {
 	public void playerShootBowEvent(EntityShootBowEvent event) {
 		if (event.getEntity() instanceof Player) {
 			if (event.getBow().getItemMeta().hasEnchant(TNT_BOW)) {
-				System.out.println(true);
 				Player p = (Player) event.getEntity();
 
 				//ItemMeta meta = event.getBow().getItemMeta();

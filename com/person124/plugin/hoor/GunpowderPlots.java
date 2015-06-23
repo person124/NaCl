@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.FurnaceInventory;
+import org.bukkit.inventory.ItemStack;
 
 import com.person124.plugin.Config;
 import com.person124.plugin.PPBase;
@@ -38,6 +39,7 @@ public class GunpowderPlots extends PPBase {
 			FurnaceInventory inv = ((Furnace) event.getClickedBlock().getState()).getInventory();
 			if (inv.getSmelting() == null) return;
 			if (inv.getSmelting().getType() == Material.SULPHUR) {
+				inv.setSmelting(new ItemStack(Material.AIR));
 				pp.getServer().getScheduler().scheduleSyncDelayedTask(pp, new Runnable() {
 					public void run() {
 						double x = event.getClickedBlock().getLocation().getX();

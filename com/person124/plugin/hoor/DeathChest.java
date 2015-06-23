@@ -7,8 +7,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import net.md_5.bungee.api.ChatColor;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
@@ -19,9 +17,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.massivecraft.factions.entity.BoardColl;
@@ -37,7 +32,7 @@ public class DeathChest extends PPBase {
 	private FileConfiguration config;
 
 	private int searchRange;
-	private boolean needChest, deleteChest;
+	private boolean needChest;
 	private List<String> materials;
 
 	public DeathChest() {
@@ -48,27 +43,11 @@ public class DeathChest extends PPBase {
 
 	public void onEnable() {
 		cfgFile = new File(pp.getDataFolder(), "deathChest.prsn");
-		config = Config.create(cfgFile, "needChest", true, "deleteChest", true, "searchRange", 5, "acceptSpawnBlocks", Arrays.asList(new String[] { "AIR", "LAVA", "WATER", "STATIONARY_LAVA", "STATIONARY_WATER" }));
+		config = Config.create(cfgFile, "needChest", true, "searchRange", 5, "acceptSpawnBlocks", Arrays.asList(new String[] { "AIR", "LAVA", "WATER", "STATIONARY_LAVA", "STATIONARY_WATER" }));
 
 		needChest = config.getBoolean("needChest");
-		deleteChest = config.getBoolean("deleteChest");
 		searchRange = config.getInt("searchRange");
 		materials = config.getStringList("acceptSpawnBlocks");
-	}
-
-	@EventHandler
-	public void onChestClose(InventoryCloseEvent event) {
-		if (deleteChest) {
-			if (event.getInventory().getType() == InventoryType.CHEST) {
-				if (event.getInventory().getName().equalsIgnoreCase(ChatColor.AQUA + "R.I.P. Stupid")) {
-					if (isEmpty(event.getInventory())) {
-						Chest c = (Chest) event.getInventory().getHolder();
-						c.setType(Material.AIR);
-						c.update(true);
-					}
-				}
-			}
-		}
 	}
 
 	@EventHandler
@@ -102,7 +81,6 @@ public class DeathChest extends PPBase {
 			ItemStack is = p.getInventory().getArmorContents()[i];
 			if (is != null) chest.getBlockInventory().addItem(is);
 		}
-		setChestName(l, ChatColor.AQUA + "R.I.P. Stupid");
 
 		setSign(l, p.getName());
 	}
@@ -171,13 +149,6 @@ public class DeathChest extends PPBase {
 			if (m == Material.getMaterial(str)) return true;
 		}
 		return false;
-	}
-
-	private boolean isEmpty(Inventory inv) {
-		for (int i = 0; i < inv.getSize(); i++) {
-			if (inv.getItem(i) != null) return false;
-		}
-		return true;
 	}
 
 	@Override
