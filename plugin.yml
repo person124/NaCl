@@ -1,5 +1,5 @@
 name: NaCl
-version: 1.4.26
+version: 1.6-1.5.15
 main: com.person124.plugin.hoor.NaCl
 author: person124
 commands:
@@ -7,10 +7,18 @@ commands:
     description: Console only command.
   tntbow:
     description: Give yourself tntbows and arrows.
+  sabd:
+    description: Allows the pardoning of the sabd system.
 permissions:
   person.tntarrow:
     description: Allows you to use /tntbow
     default: false
   person.stupid:
     description: Makes the particles follow you.
+    default: false
+  person.sabd.see:
+    description: When a odd happening happens notifies you of it.
+    default: false
+  person.sabd.pardon:
+    description: Allows you access to /sabd
     default: false

@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import com.person124.plugin.Config;
 import com.person124.plugin.PPBase;
 
 public class ShopDesk extends PPBase {
@@ -32,7 +33,7 @@ public class ShopDesk extends PPBase {
 		file = new File(pp.getDataFolder() + "/../Essentials/trade.log");
 
 		players = new File(pp.getDataFolder(), "players.prsn");
-		createFile(players);
+		Config.createFile(players);
 		configPlayers = YamlConfiguration.loadConfiguration(players);
 
 		deskFolder = new File(pp.getDataFolder(), "shopdesk");
@@ -50,7 +51,7 @@ public class ShopDesk extends PPBase {
 					String name = lines[6].replace("\"", "").substring(2);
 					String uuid = configPlayers.getString(name);
 					File cfgFile = new File(pp.getDataFolder(), "shopdesk/" + uuid + ".prsn");
-					createFile(cfgFile);
+					Config.createFile(cfgFile);
 					FileConfiguration config = YamlConfiguration.loadConfiguration(cfgFile);
 
 					//amount-thing--sold_for_amount-sold_for_thing
@@ -75,7 +76,7 @@ public class ShopDesk extends PPBase {
 
 	private void compileFiles() {
 		File totalFile = new File(pp.getDataFolder(), "shopdesk/total.prsn");
-		createFile(totalFile);
+		Config.createFile(totalFile);
 		FileConfiguration total = YamlConfiguration.loadConfiguration(totalFile);
 
 		for (String files : deskFolder.list()) {
@@ -164,15 +165,6 @@ public class ShopDesk extends PPBase {
 
 	private boolean isTradeSign(String str) {
 		return str.startsWith("Sign,Trade,Interact");
-	}
-
-	private void createFile(File f) {
-		try {
-			if (f.exists()) return;
-			f.createNewFile();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 }
