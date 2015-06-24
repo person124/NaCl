@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import net.md_5.bungee.api.ChatColor;
 
@@ -48,15 +49,16 @@ public class SABD extends PPBase {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player p = event.getPlayer();
 		String ip = p.getAddress().getAddress().toString().replace("/", "").replace(".", "-");
-		preformCheck(p.getUniqueId().toString(), ip, uuid);
-		preformCheck(ip, p.getUniqueId().toString(), ips);
+		preformCheck(p.getUniqueId().toString(), ip, uuid, true);
+		preformCheck(ip, p.getUniqueId().toString(), ips, false);
 	}
 
-	private void preformCheck(String label, String value, File f) {
+	private void preformCheck(String label, String value, File f, boolean uuid) {
 		FileConfiguration config = YamlConfiguration.loadConfiguration(f);
 		if (config.getList(label) == null) addConfig(f, config, label, value);
 		else {
 			if (!config.getList(label).contains(value)) {
+				if (checkCheck(label, uuid)) return;
 				addConfig(f, config, label, value);
 				FileConfiguration warning = YamlConfiguration.loadConfiguration(warn);
 				warning.set(label, config.getList(label));
@@ -69,7 +71,13 @@ public class SABD extends PPBase {
 			}
 		}
 	}
-	
+
+	private boolean checkCheck(String s, boolean uuid) {
+		FileConfiguration config = YamlConfiguration.loadConfiguration(cfg);
+		if (uuid) return config.getStringList("uuid").contains(s);
+		return config.getStringList("ip").contains(s);
+	}
+
 	private void sendMessageToAll(String label) {
 		pp.getLogger().info("ALERT!!!! INSPECT: " + label);
 		for (Player p : pp.getServer().getOnlinePlayers()) {
@@ -97,17 +105,12 @@ public class SABD extends PPBase {
 				p.sendMessage(ChatColor.RED + "You don't have permission to use this command!");
 				return true;
 			}
-			if (args.length == 0) {
-				p.sendMessage(ChatColor.GOLD + showHelp(0));
-				p.sendMessage(ChatColor.GOLD + showHelp(1));
-				p.sendMessage(ChatColor.GOLD + showHelp(2));
-				p.sendMessage(ChatColor.GOLD + showHelp(3));
-			} else if (args.length == 1) {
-				p.sendMessage(ChatColor.GOLD + showHelp(0));
-				p.sendMessage(ChatColor.GOLD + showHelp(1));
-				p.sendMessage(ChatColor.GOLD + showHelp(2));
-				p.sendMessage(ChatColor.GOLD + showHelp(3));
-			} else if (args.length == 2) {
+			if (args.length == 0) showHelpPlayer(p);
+			else if (args.length == 1) {
+				if (args[0].equalsIgnoreCase("list")) listThings(p);
+				else showHelpPlayer(p);
+			}
+			else if (args.length == 2) {
 				if (args[0].equalsIgnoreCase("uuid")) {
 					addUUID(args[1]);
 					p.sendMessage(ChatColor.GOLD + "UUID: " + args[1] + " has been added to ignore list.");
@@ -117,7 +120,7 @@ public class SABD extends PPBase {
 				} else if (args[0].equalsIgnoreCase("ip")) {
 					addIP(args[1]);
 					p.sendMessage(ChatColor.GOLD + "IP: " + args[1] + " has been added to ignore list.");
-				}
+				} else showHelpPlayer(p);
 			} else if (args.length == 3) {
 				if (args[2].equalsIgnoreCase("remove")) {
 					if (args[0].equalsIgnoreCase("uuid")) {
@@ -129,26 +132,16 @@ public class SABD extends PPBase {
 					} else if (args[0].equalsIgnoreCase("ip")) {
 						if (removeIP(args[1])) p.sendMessage(ChatColor.GOLD + "IP: " + args[1] + " has been removed from the ignore list.");
 						else p.sendMessage(ChatColor.GOLD + "IP: " + args[1] + " is not on the ignore list.");
-					}
-				} else {
-					p.sendMessage(ChatColor.GOLD + showHelp(0));
-					p.sendMessage(ChatColor.GOLD + showHelp(1));
-					p.sendMessage(ChatColor.GOLD + showHelp(2));
-					p.sendMessage(ChatColor.GOLD + showHelp(3));
-				}
+					} else showHelpPlayer(p);
+				} else showHelpPlayer(p);
 			}
 		} else {
-			if (args.length == 0) {
-				pp.getLogger().info(showHelp(0));
-				pp.getLogger().info(showHelp(1));
-				pp.getLogger().info(showHelp(2));
-				pp.getLogger().info(showHelp(3));
-			} else if (args.length == 1) {
-				pp.getLogger().info(showHelp(0));
-				pp.getLogger().info(showHelp(1));
-				pp.getLogger().info(showHelp(2));
-				pp.getLogger().info(showHelp(3));
-			} else if (args.length == 2) {
+			if (args.length == 0) showHelpConsole();
+			else if (args.length == 1) {
+				if (args[0].equalsIgnoreCase("list")) listThings(null);
+				else showHelpConsole();
+			}
+			else if (args.length == 2) {
 				if (args[0].equalsIgnoreCase("uuid")) {
 					addUUID(args[1]);
 					pp.getLogger().info("UUID: " + args[1] + " has been added to ignore list.");
@@ -158,7 +151,7 @@ public class SABD extends PPBase {
 				} else if (args[0].equalsIgnoreCase("ip")) {
 					addIP(args[1]);
 					pp.getLogger().info("IP: " + args[1] + " has been added to ignore list.");
-				}
+				} else showHelpConsole();
 			} else if (args.length == 3) {
 				if (args[2].equalsIgnoreCase("remove")) {
 					if (args[0].equalsIgnoreCase("uuid")) {
@@ -170,16 +163,25 @@ public class SABD extends PPBase {
 					} else if (args[0].equalsIgnoreCase("ip")) {
 						if (removeIP(args[1])) pp.getLogger().info("IP: " + args[1] + " has been removed from the ignore list.");
 						else pp.getLogger().info("IP: " + args[1] + " is not on the ignore list.");
-					}
-				} else {
-					pp.getLogger().info(showHelp(0));
-					pp.getLogger().info(showHelp(1));
-					pp.getLogger().info(showHelp(2));
-					pp.getLogger().info(showHelp(3));
-				}
+					} else showHelpConsole();
+				} else showHelpConsole();
 			}
 		}
 		return true;
+	}
+
+	//@SuppressWarnings("unchecked")
+	private void listThings(Player p) {
+		FileConfiguration warning = YamlConfiguration.loadConfiguration(warn);
+		Map<String, Object> map = warning.getValues(false);
+		for (String s : map.keySet()) {
+			String temp = "";
+			for (String str : warning.getStringList(s)) {
+				temp += str + ", ";
+			}
+			if (p != null) p.sendMessage(ChatColor.GOLD + s + ": " + temp);
+			else pp.getLogger().info(s + ": " + temp);
+		}
 	}
 
 	private void addIP(String ip) {
@@ -234,6 +236,22 @@ public class SABD extends PPBase {
 		return true;
 	}
 
+	private void showHelpPlayer(Player p) {
+		p.sendMessage(ChatColor.GOLD + showHelp(0));
+		p.sendMessage(ChatColor.GOLD + showHelp(1));
+		p.sendMessage(ChatColor.GOLD + showHelp(2));
+		p.sendMessage(ChatColor.GOLD + showHelp(3));
+		p.sendMessage(ChatColor.GOLD + showHelp(4));
+	}
+
+	private void showHelpConsole() {
+		pp.getLogger().info(showHelp(0));
+		pp.getLogger().info(showHelp(1));
+		pp.getLogger().info(showHelp(2));
+		pp.getLogger().info(showHelp(3));
+		pp.getLogger().info(showHelp(4));
+	}
+
 	private String showHelp(int i) {
 		String s = "NOT FOUND.";
 		switch (i) {
@@ -248,6 +266,9 @@ public class SABD extends PPBase {
 				break;
 			case 3:
 				s = "Add 'remove' to the end of the command to remove thing from the list.";
+				break;
+			case 4:
+				s = "/nabd list | Lists all warnings.";
 				break;
 		}
 		return s;

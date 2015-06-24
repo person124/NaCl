@@ -6,10 +6,13 @@ import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
 
@@ -26,32 +29,54 @@ public class StupidParticles extends PPBase {
 
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event) {
-		if (event.getPlayer().hasPermission(PARTICLE_PERMISSION) || event.getPlayer().isOp()) event.getPlayer().getWorld().playEffect(getLocation(event.getBlock(), 0.5, 0.5, 0.5), Effect.SPELL, 0);
+		if (check(event.getPlayer())) event.getPlayer().getWorld().playEffect(getLocation(event.getBlock(), 0.5, 0.5, 0.5), Effect.SPELL, 0);
 	}
 
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event) {
-		if (event.getPlayer().hasPermission(PARTICLE_PERMISSION) || event.getPlayer().isOp()) event.getPlayer().getWorld().playEffect(getLocation(event.getBlock(), 0.5, 0.5, 0.5), Effect.ENDER_SIGNAL, 0);
+		if (check(event.getPlayer())) event.getPlayer().getWorld().playEffect(getLocation(event.getBlock(), 0.5, 0.5, 0.5), Effect.ENDER_SIGNAL, 0);
 	}
 
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event) {
-		if (event.getPlayer().hasPermission(PARTICLE_PERMISSION) || event.getPlayer().isOp()) {
+		if (check(event.getPlayer())) {
 			if (event.getFrom().getY() != event.getTo().getY()) event.getPlayer().getWorld().playEffect(getLocation(event.getPlayer()), Effect.FIREWORKS_SPARK, 0);
 			event.getPlayer().getWorld().playEffect(getLocation(event.getPlayer()), Effect.COLOURED_DUST, 0);
 		}
+		if (isPerson(event.getPlayer())) event.getPlayer().getWorld().playEffect(getLocation(event.getPlayer(), 0, 0.5, 0), Effect.HEART, 0);
 	}
 
 	@EventHandler
 	public void onPlayerSneak(PlayerToggleSneakEvent event) {
-		if (event.getPlayer().hasPermission(PARTICLE_PERMISSION) || event.getPlayer().isOp()) event.getPlayer().getWorld().playEffect(getLocation(event.getPlayer(), 0, 0.5, 0), Effect.HEART, 0);
+		if (check(event.getPlayer())) event.getPlayer().getWorld().playEffect(getLocation(event.getPlayer(), 0, 0.5, 0), Effect.HEART, 0);
 	}
 
 	@EventHandler
 	public void onPlayerSprint(PlayerToggleSprintEvent event) {
-		if (event.getPlayer().hasPermission(PARTICLE_PERMISSION) || event.getPlayer().isOp()) if (!event.getPlayer().isSprinting()) event.getPlayer().getWorld().playEffect(getLocation(event.getPlayer(), 0, 0.5, 0), Effect.EXPLOSION_HUGE, 0);
+		if (check(event.getPlayer())) if (!event.getPlayer().isSprinting()) event.getPlayer().getWorld().playEffect(getLocation(event.getPlayer(), 0, 0.5, 0), Effect.EXPLOSION_HUGE, 0);
+	}
+	
+	@EventHandler
+	public void onPlayerTeleport(PlayerTeleportEvent event) {
+		if (checkMinus(event.getPlayer())) {
+			if (event.getCause() == TeleportCause.SPECTATE) return;
+			event.getPlayer().getWorld().playEffect(event.getFrom(), Effect.ENDER_SIGNAL, 0);
+			event.getPlayer().getWorld().playEffect(event.getTo(), Effect.ENDER_SIGNAL, 0);
+		}
 	}
 
+	private boolean checkMinus(Player p) {
+		return p.hasPermission(PARTICLE_PERMISSION) || p.isOp();
+	}
+	
+	private boolean check(Player p) {
+		return (p.hasPermission(PARTICLE_PERMISSION) || p.isOp()) && !isPerson(p);
+	}
+	
+	private boolean isPerson(Player p) {
+		return p.getUniqueId().toString().equals("e854a81a-f2c2-4168-bef8-877a5bdd1835");
+	}
+	
 	private Location getLocation(Object obj) {
 		return getLocation(obj, 0, 0, 0);
 	}

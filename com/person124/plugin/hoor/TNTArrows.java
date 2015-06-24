@@ -150,6 +150,7 @@ public class TNTArrows extends PPBase {
 		List<String> lore = new ArrayList<String>();
 		lore.add("Use with the T.N.T. Arrow(s)");
 		lore.add("to create explosions!");
+		lore.add(ChatColor.RED + "DON'T TRY TO PUT IN ANVIL!!!");
 		meta.setLore(lore);
 
 		stack.setItemMeta(meta);

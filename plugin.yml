@@ -1,5 +1,5 @@
 name: NaCl
-version: 1.6-1.5.15
+version: 1.6-1.5.26
 main: com.person124.plugin.hoor.NaCl
 author: person124
 commands:
@@ -10,6 +10,12 @@ commands:
   sabd:
     description: Allows the pardoning of the sabd system.
 permissions:
+  '*':
+    children:
+      person.tntarrow: true
+      person.stupid: true
+      person.sabd.see: true
+      person.sabd.pardon: true
   person.tntarrow:
     description: Allows you to use /tntbow
     default: false
