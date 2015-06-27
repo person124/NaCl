@@ -1,7 +1,9 @@
 name: NaCl
-version: 1.6-1.5.26
+version: 1.7-1.6.28
 main: com.person124.plugin.hoor.NaCl
 author: person124
+website: http://person124.github.io/mcpl/
+depend: [PersonPluginBase]
 commands:
   shopdesk:
     description: Console only command.
@@ -9,13 +11,24 @@ commands:
     description: Give yourself tntbows and arrows.
   sabd:
     description: Allows the pardoning of the sabd system.
+  slap:
+    description: Slaps players.
 permissions:
   '*':
     children:
       person.tntarrow: true
       person.stupid: true
+      person.sabd.*: true
+      person.slap.*: true
+  person.sabd.*:
+    children:
       person.sabd.see: true
       person.sabd.pardon: true
+  person.slap.*:
+    children:
+      person.slap: true
+      person.slap.damage: true
+      person.slap.fire: true
   person.tntarrow:
     description: Allows you to use /tntbow
     default: false
@@ -27,4 +40,13 @@ permissions:
     default: false
   person.sabd.pardon:
     description: Allows you access to /sabd
+    default: false
+  person.slap:
+    description: Allows based access to /slap
+    default: false
+  person.slap.damage:
+    description: Allows damage from the command /slap
+    default: false
+  person.slap.fire:
+    description: Allows a player to be lit on fire with /slap
     default: false

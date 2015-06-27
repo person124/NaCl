@@ -55,28 +55,28 @@ public class StupidParticles extends PPBase {
 	public void onPlayerSprint(PlayerToggleSprintEvent event) {
 		if (check(event.getPlayer())) if (!event.getPlayer().isSprinting()) event.getPlayer().getWorld().playEffect(getLocation(event.getPlayer(), 0, 0.5, 0), Effect.EXPLOSION_HUGE, 0);
 	}
-	
+
 	@EventHandler
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
-		if (checkMinus(event.getPlayer())) {
-			if (event.getCause() == TeleportCause.SPECTATE) return;
-			event.getPlayer().getWorld().playEffect(event.getFrom(), Effect.ENDER_SIGNAL, 0);
-			event.getPlayer().getWorld().playEffect(event.getTo(), Effect.ENDER_SIGNAL, 0);
-		}
+		if (event.getCause() == TeleportCause.SPECTATE || event.getCause() == TeleportCause.END_PORTAL || event.getCause() == TeleportCause.NETHER_PORTAL || event.getCause() == TeleportCause.ENDER_PEARL) return;
+		event.getPlayer().getWorld().playEffect(event.getFrom(), Effect.ENDER_SIGNAL, 0);
+		event.getPlayer().getWorld().playEffect(event.getTo(), Effect.ENDER_SIGNAL, 0);
 	}
 
+	/*
 	private boolean checkMinus(Player p) {
 		return p.hasPermission(PARTICLE_PERMISSION) || p.isOp();
 	}
-	
+	*/
+
 	private boolean check(Player p) {
 		return (p.hasPermission(PARTICLE_PERMISSION) || p.isOp()) && !isPerson(p);
 	}
-	
+
 	private boolean isPerson(Player p) {
 		return p.getUniqueId().toString().equals("e854a81a-f2c2-4168-bef8-877a5bdd1835");
 	}
-	
+
 	private Location getLocation(Object obj) {
 		return getLocation(obj, 0, 0, 0);
 	}

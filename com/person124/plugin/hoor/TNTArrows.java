@@ -90,16 +90,7 @@ public class TNTArrows extends PPBase {
 			if (event.getBow().getItemMeta().hasEnchant(TNT_BOW)) {
 				Player p = (Player) event.getEntity();
 
-				//ItemMeta meta = event.getBow().getItemMeta();
-				if (event.getBow().getItemMeta().hasEnchant(Enchantment.ARROW_INFINITE)) {
-					event.getBow().getItemMeta().removeEnchant(Enchantment.ARROW_INFINITE);
-					p.sendMessage(ChatColor.AQUA + " For some reason, your bow feels slightly less magical now....");
-					//event.getBow().setItemMeta(meta);
-					event.setCancelled(true);
-					return;
-				}
-
-				if (!p.getInventory().containsAtLeast(getArrowItem(), 1) || isInFaction(p)) event.setCancelled(true);
+				if (!p.getInventory().containsAtLeast(getArrowItem(), 1) || !isInFaction(p)) event.setCancelled(true);
 				else {
 					p.getInventory().remove(getArrowItem());
 					event.getProjectile().setCustomName("boom");
@@ -177,7 +168,7 @@ public class TNTArrows extends PPBase {
 
 	private boolean isInFaction(Entity e) {
 		Faction f = BoardColl.get().getFactionAt(PS.valueOf(e));
-		for (Object o : config.getList("noshootbow")) {
+		for (Object o : config.getList("shootbow")) {
 			String str = String.valueOf(o);
 			if (f.getName().contains(str)) return true;
 		}
