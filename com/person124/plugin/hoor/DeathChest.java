@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import net.md_5.bungee.api.ChatColor;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
@@ -16,7 +18,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.massivecraft.factions.entity.BoardColl;
@@ -34,6 +40,8 @@ public class DeathChest extends PPBase {
 	private int searchRange;
 	private boolean needChest;
 	private List<String> materials;
+
+	private String chestName = ChatColor.GOLD + "R.I.P. Stupid";
 
 	public DeathChest() {
 		super("DeathChest");
@@ -55,7 +63,16 @@ public class DeathChest extends PPBase {
 		Location l = checkLocation(event.getEntity().getLocation());
 		if (l == null) return;
 
-		if (needChest && event.getEntity().getInventory().contains(Material.CHEST)) event.getEntity().getInventory().remove(Material.CHEST);
+		if (needChest && event.getEntity().getInventory().contains(Material.CHEST)) {
+			for (ItemStack is : event.getEntity().getInventory().getContents()) {
+				if (is != null) {
+					if (is.getType() == Material.CHEST) {
+						is.setAmount(is.getAmount() - 1);
+						break;
+					}
+				}
+			}
+		}
 		else return;
 
 		if (isInRegion(event.getEntity())) return;
@@ -81,8 +98,40 @@ public class DeathChest extends PPBase {
 			ItemStack is = p.getInventory().getArmorContents()[i];
 			if (is != null) chest.getBlockInventory().addItem(is);
 		}
+		setChestName(l, chestName);
 
 		setSign(l, p.getName());
+	}
+
+	@EventHandler
+	public void onChestClose(InventoryCloseEvent event) {
+		if (event.getInventory().getType() == InventoryType.CHEST) {
+			if (event.getInventory().getName().equals(chestName)) {
+				for (ItemStack is : event.getInventory().getContents()) {
+					if (is != null) return;
+				}
+
+				Chest chest = (Chest) event.getInventory().getHolder();
+				chest.getBlock().setType(Material.AIR);
+			}
+		}
+	}
+
+	@EventHandler
+	public void onChestShiftClick(PlayerInteractEvent event) {
+		if (event.getClickedBlock() == null) return;
+		if (event.getClickedBlock().getType() == Material.CHEST && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			Chest chest = (Chest) event.getClickedBlock().getState();
+			if (chest.getBlockInventory().getName().equals(chestName)) {
+				if (event.getPlayer().isSneaking()) {
+					for (ItemStack is : chest.getBlockInventory().getContents()) {
+						if (is != null) event.getPlayer().getInventory().addItem(is);
+					}
+					chest.getBlockInventory().clear();
+					chest.getBlock().setType(Material.AIR);
+				}
+			}
+		}
 	}
 
 	private Location checkLocation(Location old) {
