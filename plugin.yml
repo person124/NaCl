@@ -1,10 +1,12 @@
 name: NaCl
-version: 1.8-1.6.40
+version: 1.9-1.7.8
 main: com.person124.plugin.hoor.NaCl
 author: person124
 website: http://person124.github.io/mcpl/
 depend: [PersonPluginBase]
 commands:
+  nacl:
+    description: Allows reloading of Nacl and sub-plugins.
   shopdesk:
     description: Console only command.
   tntbow:
@@ -16,6 +18,7 @@ commands:
 permissions:
   '*':
     children:
+      person.nacl: true
       person.tntarrow: true
       person.stupid: true
       person.sabd.*: true
@@ -29,6 +32,9 @@ permissions:
       person.slap: true
       person.slap.damage: true
       person.slap.fire: true
+  person.nacl:
+    description: Allows you to reload NaCl and sub-plugins.
+    default: false
   person.tntarrow:
     description: Allows you to use /tntbow
     default: false
