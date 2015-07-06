@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.person124.plugin.Config;
 import com.person124.plugin.PPBase;
+import com.person124.plugin.hoor.misc.SABDTabCompleter;
 
 //Suspicious Account Behavior Detection
 public class SABD extends PPBase {
@@ -32,6 +33,7 @@ public class SABD extends PPBase {
 		setHasEvents();
 		setNeedsFolder();
 		setCommand("sabd");
+		setTabCompleter(new SABDTabCompleter());
 	}
 
 	public void onEnable() {

@@ -30,6 +30,7 @@ import com.massivecraft.massivecore.ps.PS;
 import com.person124.plugin.Config;
 import com.person124.plugin.EnchantmentUtil;
 import com.person124.plugin.PPBase;
+import com.person124.plugin.hoor.misc.TNTArrowsTabCompleter;
 
 public class TNTArrows extends PPBase {
 
@@ -45,6 +46,7 @@ public class TNTArrows extends PPBase {
 		super("TNTArrows");
 		setHasEvents();
 		setCommand("tntbow");
+		setTabCompleter(new TNTArrowsTabCompleter());
 		setNeedsFolder();
 	}
 

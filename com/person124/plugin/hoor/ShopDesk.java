@@ -16,6 +16,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.person124.plugin.Config;
 import com.person124.plugin.PPBase;
+import com.person124.plugin.hoor.misc.ShopDeskTabCompleter;
 
 public class ShopDesk extends PPBase {
 
@@ -25,6 +26,7 @@ public class ShopDesk extends PPBase {
 	public ShopDesk() {
 		super("Shop Desk");
 		setCommand("shopdesk");
+		setTabCompleter(new ShopDeskTabCompleter());
 		setHasEvents();
 		setNeedsFolder();
 	}
